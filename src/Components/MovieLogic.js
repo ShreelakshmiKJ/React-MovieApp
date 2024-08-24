@@ -10,12 +10,32 @@ const MovieLogic=()=>{
     const [movieData,setData]=useState([]);
     const [url_set,setUrl]=useState(url);
     const [search,setSearch]=useState();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(()=>{
         fetch(url_set).then(res=>res.json()).then(data=>{
             setData(data.results);
-        });
-    },[url_set])
+            setLoading(false);
+        })
+        .catch(error => {
+            console.log('Error fetching data:', error);
+            setError(error); 
+            setLoading(false); 
+        })
+    },[url_set]);
+
+    if(loading){
+        return(
+            <div> loading... </div>
+        )
+    }
+
+    if(error){
+        return(
+            <div> Error fetching data: {error.message} </div>
+        )
+    }
 
     const getData=(movieType)=>{
         if(movieType=="Popular")
